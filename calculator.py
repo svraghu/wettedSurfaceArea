@@ -173,7 +173,7 @@ class Plug(Shape):
 
 SHAPES = [Tube(), TwoDBag(), ThreeDBiocontainer(),  ThreeDRdBottle(), Flask(), ConicalFrustrum(), Tee(), Elbow(), Cross(), Wye(), Cap(), Plug()]
 compute_after_id = None
-def compute_values(event=None):  # Add an optional event parameter
+def compute_values(event=None):
     global compute_after_id
     if compute_after_id:
         app.after_cancel(compute_after_id)  # Cancel the previously scheduled function
