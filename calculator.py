@@ -58,30 +58,31 @@ class ThreeDBiocontainer(Shape):
     
 class Tee(Shape):
     def __init__(self):
-        super().__init__('Tee',['ID 1','Length', 'ID 2', 'Height'])
-    def surface_area(self, id_1, height, id_2, length):
+        super().__init__('Tee',['Horizontal ID', 'Vertical ID', 'Length', 'Height', 'Flange OD'])
+    def surface_area(self, id_1, id_2, length, height, flange):
+        trunk_height = height - ((flange - id_1)/2) - id_1
         area_tube_1 = math.pi * id_1 * length
-        area_tube_2 = math.pi * id_2 * height
-        intersection_area = math.pi * (id_2/2)**2  
-        sa = area_tube_1 + area_tube_2 - intersection_area
+        area_tube_2 = math.pi * id_2 * trunk_height
+        sa = area_tube_1 + area_tube_2
         return sa
-    def volume(self, id_1, length, id_2, height):
+    def volume(self, id_1, id_2, length, height, flange):
         r1 = id_1 / 2
         r2 = id_2 / 2
-        vol = ( math.pi * length * r1**2 ) + ( math.pi * height * r2**2)
+        trunk_height = height - ((flange - id_1)/2) - id_1
+        vol = ( math.pi * length * r1**2 ) + ( math.pi * trunk_height * r2**2)
         return vol
 
 class Elbow(Shape):
     def __init__(self):
-        super().__init__('Elbow',['ID 1','Length', 'ID 2', 'Height'])
-    def surface_area(self, id_1, height, id_2, length):
+        super().__init__('Elbow',['Horizontal ID', 'Vertical ID', 'Length', 'Height'])
+    def surface_area(self, id_1, id_2, length, height):
         arc_length = math.radians(90)
         area_tube_1 = math.pi * id_1 * length
         area_tube_2 = math.pi * id_2 * height
         area_curve = math.pi * id_2 * arc_length
         sa = area_tube_1 + area_tube_2 + area_curve
         return sa
-    def volume(self, id_1, length, id_2, height):
+    def volume(sself, id_1, id_2, length, height):
         r1 = id_1 / 2
         r2 = id_2 / 2
         arc_length = math.radians(90)
@@ -90,14 +91,14 @@ class Elbow(Shape):
 
 class Cross(Shape):
     def __init__(self):
-        super().__init__('Cross',['ID 1','Length', 'ID 2', 'Height'])
-    def surface_area(self, id_1, height, id_2, length):
+        super().__init__('Cross',['Horizontal ID', 'Vertical ID', 'Length', 'Height'])
+    def surface_area(self, id_1, id_2, length, height):
         area_tube_1 = math.pi * id_1 * length
         area_tube_2 = math.pi * id_2 * height
         intersection_area = math.pi * (id_2/2)**2
         sa = area_tube_1 + area_tube_2 - intersection_area
         return sa
-    def volume(self, id_1, length, id_2, height):
+    def volume(self, id_1, id_2, length, height):
         r1 = id_1 / 2
         r2 = id_2 / 2
         vol = ( math.pi * length * r1**2 ) + ( math.pi * height * r2**2) - (math.pi * r2**2)
@@ -176,7 +177,7 @@ compute_after_id = None
 def compute_values(event=None):
     global compute_after_id
     if compute_after_id:
-        app.after_cancel(compute_after_id)  # Cancel the previously scheduled function
+        app.after_cancel(compute_after_id)
     compute_after_id = app.after(100, computing_values)
 def computing_values():
     selected_shape_name = shape_combobox.get()
