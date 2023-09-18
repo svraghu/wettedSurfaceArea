@@ -132,9 +132,23 @@ class ThreeDRdBottle(Shape):
     def __init__(self):
         super().__init__('3D Round Bottle',['ID', 'Height'])
     def surface_area(self, id_1, height):
-        sa = ( 2 * math.pi * ( (id_1 / 2) **2 )) + ( math.pi * id_1 * height )
+        sa = ( math.pi * ( (id_1 / 2) **2 )) + ( math.pi * id_1 * height )
         return sa
     def volume(self, id_1, height):
+        vol = math.pi * height * (id_1 / 2)**2
+        return vol
+    
+class ThreeDRdBiocontainer(Shape):
+    def __init__(self):
+        super().__init__('3D Round Biocontainer',['Fold Length', 'Width', 'Height'])
+    def surface_area(self, flength, width, height):
+        flatgap = width - (2 * flength)
+        id_1 = ((flength + (flatgap / 2)) / math.cos(math.radians(45))) * 2
+        sa = ( 2 * math.pi * ( (id_1 / 2) **2 )) + ( math.pi * id_1 * height )
+        return sa
+    def volume(self, flength, width, height):
+        flatgap = width - (2 * flength)
+        id_1 = ((flength + (flatgap / 2)) / math.cos(math.radians(45))) * 2
         vol = math.pi * height * (id_1 / 2)**2
         return vol
 
@@ -172,7 +186,7 @@ class Plug(Shape):
         vol = 0.0
         return vol
 
-SHAPES = [Tube(), TwoDBag(), ThreeDBiocontainer(),  ThreeDRdBottle(), Flask(), ConicalFrustrum(), Tee(), Elbow(), Cross(), Wye(), Cap(), Plug()]
+SHAPES = [Tube(), TwoDBag(), ThreeDBiocontainer(), ThreeDRdBiocontainer(), ThreeDRdBottle(), Flask(), ConicalFrustrum(), Tee(), Elbow(), Cross(), Wye(), Cap(), Plug()]
 compute_after_id = None
 def compute_values(event=None):
     global compute_after_id
